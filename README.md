@@ -44,6 +44,7 @@ Copyright
 Copyright &copy; 2011 [Martin Kozák][3]. See `LICENSE.txt` for
 further details.
 
+[1]: http://www.ruby-doc.org/core/classes/File.html
 [2]: http://github.com/martinkozak/em-sequence/issues
 [3]: http://www.martinkozak.net/
 [4]: http://rubyeventmachine.com/
