@@ -13,8 +13,8 @@ require 'rake'
 require 'jeweler'
 Jeweler::Tasks.new do |gem|
   # gem is a Gem::Specification... see http://docs.rubygems.org/read/chapter/20 for more options
-  gem.name = "em-file"
-  gem.homepage = "https://github.com/martinkozak/em-file"
+  gem.name = "em-files"
+  gem.homepage = "https://github.com/martinkozak/em-files"
   gem.license = "MIT"
   gem.summary = "Sequenced file reader and writer through EventMachine. Solves problem of blocking disk IO while operating with large files."
   gem.email = "martinkozak@martinkozak.net"
