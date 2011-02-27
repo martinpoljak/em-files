@@ -16,7 +16,7 @@ Jeweler::Tasks.new do |gem|
   gem.name = "em-file"
   gem.homepage = "https://github.com/martinkozak/em-file"
   gem.license = "MIT"
-  gem.summary = "Sequenced file reader through EventMachine. Solves problem of blocking disk IO while operating with large files."
+  gem.summary = "Sequenced file reader and writer through EventMachine. Solves problem of blocking disk IO while operating with large files."
   gem.email = "martinkozak@martinkozak.net"
   gem.authors = ["Martin Kozák"]
   # Include your dependencies below. Runtime dependencies are required when using your gem,
