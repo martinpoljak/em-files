@@ -10,7 +10,7 @@ simultaneously from EM point of view.
 API is similar to classic Ruby file IO represented by [File][1] class.
 See an example:
 
-    require "em-file"
+    require "em-files"
     EM::File::open("some_file.txt", "r") do |io|
         io.read(1024) do |data|     # writing works by very similar way, of sure
             puts data
