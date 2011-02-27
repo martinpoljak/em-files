@@ -23,7 +23,7 @@ Gem::Specification.new do |s|
     "README.md",
     "Rakefile",
     "VERSION",
-    "em-file.gemspec",
+    "em-files.gemspec",
     "lib/em-files.rb",
     "test.rb"
   ]
