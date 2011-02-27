@@ -1,7 +1,7 @@
 EventMachine Files
 ==================
 
-**em-files** solve problem of blocking disk IO while operating with 
+**em-files** solve problem of blocking disk IO when operating with 
 large files. Use [EventMachine][4] for multiplexing reads and writes
 to small blocks performed in standalone EM ticks. They speed down the
 file IO operations of sure, but allow running other tasks with them 
