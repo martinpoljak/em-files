@@ -1,20 +1,22 @@
 EventMachine Files
 ==================
 
-**em-file** solves problem of blocking disk IO while operating with 
-large files. Uses [EventMachine][4] for multiplexing reads and writes
-to small blocks performed in standalone EM ticks. It speeds down the
-file IO operations of sure, but allows running other tasks with them 
-simultaneously from EM point of view.
+**em-files** solve problem of blocking disk IO while operating with 
+large files. Use [EventMachine][4] for multiplexing reads and writes
+to small blocks performed in standalone EM ticks. They speed down the
+file IO operations of sure, but allow running other tasks with them 
+simultaneously (from EM point of view).
 
 API is similar to classic Ruby file IO represented by [File][1] class.
 See an example:
 
     require "em-files"
-    EM::File::open("some_file.txt", "r") do |io|
-        io.read(1024) do |data|     # writing works by very similar way, of sure
-            puts data
-            io.close()              # it's necessary to do it in block too, because reading is evented
+    EM::run do
+        EM::File::open("some_file.txt", "r") do |io|
+            io.read(1024) do |data|     # writing works by very similar way, of sure
+                puts data
+                io.close()              # it's necessary to do it in block too, because reading is evented
+            end
         end
     end
     
