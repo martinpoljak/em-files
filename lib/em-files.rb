@@ -53,8 +53,8 @@ module EM
         def self.read(filepath, rwsize = 65536, &block)
             self::open(filepath, "rb", rwsize) do |io|
                 io.read do |out|
-                    block.call(out)
                     io.close()
+                    block.call(out)
                 end
             end
         end
@@ -72,8 +72,8 @@ module EM
         def self.write(filepath, data = "", rwsize = 65536, &block)
             self::open(filepath, "wb", rwsize) do |io|
                 io.write(data) do |length|
-                    block.call(length)
                     io.close()
+                    block.call(length)
                 end
             end
         end
@@ -97,6 +97,14 @@ module EM
         @rw_len
         
         ##
+        # Holds mode of the object.
+        # @return [String]
+        #
+        
+        attr_reader :mode
+        @mode
+        
+        ##
         # Constructor.
         #
         # @param [String] filepath path to file
@@ -105,6 +113,7 @@ module EM
         #
                 
         def initialize(filepath, mode = "r", rwsize = 65536)
+            @mode = mode
             @native = ::File::open(filepath, mode)
             @rw_len = rwsize
         end
@@ -123,6 +132,7 @@ module EM
         
         def read(length = nil, &block)
             buffer = ""
+            pos = 0
             
             worker = Proc::new do
             
@@ -137,7 +147,15 @@ module EM
                 end
                 
                 # Reads
-                buffer << @native.read(rlen)
+                begin
+                    buffer << @native.read(rlen)
+                rescue Errno::EBADF
+                    self.reopen!
+                    @native.seek(pos)
+                    redo
+                end
+                
+                pos = @native.pos
                 
                 # Returns or continues work
                 if @native.eof? or (buffer.length == length)
@@ -154,6 +172,14 @@ module EM
         end
         
         ##
+        # Reopens the file with the original mode.
+        #
+        
+        def reopen!
+            @native = ::File.open(@native.path, @mode)
+        end
+        
+        ##
         # Writes data to file.
         #
         # @param [String] data data for write
@@ -163,12 +189,21 @@ module EM
         
         def write(data, &block)
             written = 0
+            pos = 0
             
             worker = Proc::new do
             
                 # Writes
-                written += @native.write(data[written...(written + @rw_len)])
+                begin
+                    written += @native.write(data[written...(written + @rw_len)])
+                rescue Errno::EBADF
+                    self.reopen!
+                    @native.seek(pos)
+                    redo
+                end
             
+                pos = @native.pos
+                
                 # Returns or continues work
                 if written >= data.bytesize
                     if not block.nil?
