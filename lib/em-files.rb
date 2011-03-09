@@ -41,7 +41,8 @@ module EM
         end
         
         ##
-        # Reads wholoe content of the file.
+        # Reads whole content of the file. Be warn, it reads it in 
+        # binary mode.
         #
         # @param [String] filepath path to file
         # @param [Integer] rwsize size of block operated during one tick
@@ -50,7 +51,7 @@ module EM
         
         
         def self.read(filepath, rwsize = 65536, &block)
-            self::open(filepath, "r", rwsize) do |io|
+            self::open(filepath, "rb", rwsize) do |io|
                 io.read do |out|
                     block.call(out)
                     io.close()
@@ -59,7 +60,7 @@ module EM
         end
         
         ##
-        # Writes data to file and closes it.
+        # Writes data to file and closes it. Writes them in binary mode.
         #
         # @param [String] filepath path to file
         # @param [String] data data for write
@@ -69,7 +70,7 @@ module EM
         #
         
         def self.write(filepath, data = "", rwsize = 65536, &block)
-            self::open(filepath, "w", rwsize) do |io|
+            self::open(filepath, "wb", rwsize) do |io|
                 io.write(data) do |length|
                     block.call(length)
                     io.close()

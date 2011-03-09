@@ -8,6 +8,9 @@ GEM
       git (>= 1.2.5)
       rake
     rake (0.8.7)
+    riot (0.12.2)
+      rr
+    rr (1.0.2)
 
 PLATFORMS
   ruby
@@ -16,3 +19,4 @@ DEPENDENCIES
   bundler (~> 1.0.0)
   eventmachine (>= 0.12.10)
   jeweler (~> 1.5.2)
+  riot (>= 0.12.1)
