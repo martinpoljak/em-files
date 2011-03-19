@@ -52,7 +52,7 @@ using filters:
 
     zip = Zlib::Deflate::new
     filter = Proc::new { |chunk| zip.deflate(chunk, Zlib::SYNC_FLUSH) }
-    data = "..."    # some bigger than big data
+    data = "..."    # some data bigger than big
     
     EM::run do
         EM::File::write(data, filter)   # done in several ticks
