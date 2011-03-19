@@ -26,6 +26,37 @@ methods only, so for special operations use simply:
     EM::File::open("some_file.txt", "r") do |io|
         io.native   # returns native Ruby File class object
     end
+    
+### Special Uses
+
+It's possible to use also another IO objects than `File` object by 
+giving appropriate IO instance instead of filename to methods:
+
+    require "em-files"
+    require "stringio"
+    
+    io = StringIO::new
+    
+    EM::run do
+        EM::File::open(io) do |io|
+            # some multiplexed operations
+        end
+    end
+    
+By this way you can also perform for example more time consuming
+operations by simple way (if they can be processed in block manner) 
+using filters:
+
+    require "em-files"
+    require "zlib"
+
+    zip = Zlib::Deflate::new
+    filter = Proc::new { |chunk| zip.deflate(chunk, Zlib::SYNC_FLUSH) }
+    data = "..."    # some bigger than big data
+    
+    EM::run do
+        EM::File::write(data, filter)   # done in several ticks
+    end
 
     
 Contributing
