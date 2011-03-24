@@ -2,6 +2,7 @@
 # (c) 2011 Martin Kozák (martinkozak@martinkozak.net)
 
 require "eventmachine"
+require "multitype-introspection"
 
 ##
 # Main EventMachine module.
@@ -30,7 +31,7 @@ module EM
         # because processing is asynchronous so it doesn't know when 
         # is convenient to close the file.
         #
-        # @param [String] filepath path to file
+        # @param [String, IO, StringIO] filepath path to file or IO object
         # @param [String] mode file access mode (see equivalent Ruby method)
         # @param [Integer] rwsize size of block operated during one tick
         # @param [Proc] block syntactic sugar for wrapping File access object
@@ -53,7 +54,7 @@ module EM
         # binary mode. If IO object is given instead of filepath, uses 
         # it as native one and +mode+ argument is ignored.
         #
-        # @param [String] filepath path to file
+        # @param [String, IO, StringIO] filepath path to file or IO object
         # @param [Integer] rwsize size of block operated during one tick
         # @param [Proc] filter filter which for postprocessing each 
         #   read chunk
@@ -76,7 +77,7 @@ module EM
         # If IO object is given instead of filepath, uses it as native 
         # one and +mode+ argument is ignored.
         #
-        # @param [String] filepath path to file
+        # @param [String, IO, StringIO] filepath path to file or IO object
         # @param [String] data data for write
         # @param [Integer] rwsize size of block operated during one tick
         # @param [Proc] filter filter which for preprocessing each 
@@ -125,7 +126,7 @@ module EM
         # Constructor. If IO object is given instead of filepath, uses 
         # it as native one and +mode+ argument is ignored.
         #
-        # @param [String, IO] filepath path to file or IO object
+        # @param [String, IO, StringIO] filepath path to file or IO object
         # @param [String] mode file access mode (see equivalent Ruby method)
         # @param [Integer] rwsize size of block operated during one tick
         #
@@ -137,7 +138,7 @@ module EM
             rwsize = self::RWSIZE if rwsize.nil?
             
             # If filepath is directly IO, uses it
-            if filepath.kind_of? IO
+            if filepath.kind_of_any? [StringIO, IO]
                 @native = filepath
             else
                 @native = ::File::open(filepath, mode)

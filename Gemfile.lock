@@ -7,6 +7,7 @@ GEM
       bundler (~> 1.0.0)
       git (>= 1.2.5)
       rake
+    multitype-introspection (0.1.2)
     rake (0.8.7)
     riot (0.12.2)
       rr
@@ -19,4 +20,5 @@ DEPENDENCIES
   bundler (~> 1.0.0)
   eventmachine (>= 0.12.10)
   jeweler (~> 1.5.2)
+  multitype-introspection (>= 0.1.2)
   riot (>= 0.12.1)
