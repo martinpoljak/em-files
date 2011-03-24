@@ -2,6 +2,7 @@
 # (c) 2011 Martin Kozák (martinkozak@martinkozak.net)
 
 require "eventmachine"
+require "stringio"
 require "multitype-introspection"
 
 ##
