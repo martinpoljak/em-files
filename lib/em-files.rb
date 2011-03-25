@@ -232,7 +232,9 @@ module EM
         
         ##
         # Writes data to file. Supports writing both strings or copying 
-        # from another IO object.
+        # from another IO object. Returns length of written data to 
+        # callback if filename given or current position of output 
+        # string if IO used.
         #
         # It will reopen the file if +EBADF: Bad file descriptor+ of 
         # +File+ class IO object will occur on +File+ object.
