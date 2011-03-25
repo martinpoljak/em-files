@@ -57,6 +57,10 @@ using filters:
     EM::run do
         EM::File::write(data, filter)   # done in several ticks
     end
+    
+`#write` supports also copying data from another IO stream because it 
+uses `StringIO` internally. Simply give it IO object instead of 
+`String`. It will read it until EOF will occur.
 
     
 Contributing

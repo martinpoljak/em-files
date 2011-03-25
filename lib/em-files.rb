@@ -3,7 +3,9 @@
 
 require "eventmachine"
 require "stringio"
-require "multitype-introspection"
+require "hash-utils/io"    # >= 0.14.0
+require "hash-utils/stringio"
+require "hash-utils/object"
 
 ##
 # Main EventMachine module.
@@ -139,7 +141,7 @@ module EM
             rwsize = self::RWSIZE if rwsize.nil?
             
             # If filepath is directly IO, uses it
-            if filepath.kind_of_any? [StringIO, IO]
+            if filepath.io?
                 @native = filepath
             else
                 @native = ::File::open(filepath, mode)
@@ -229,12 +231,13 @@ module EM
         end
         
         ##
-        # Writes data to file.
+        # Writes data to file. Supports writing both strings or copying 
+        # from another IO object.
         #
         # It will reopen the file if +EBADF: Bad file descriptor+ of 
-        # +File+ class IO object will occur.
+        # +File+ class IO object will occur on +File+ object.
         #
-        # @param [String] data data for write
+        # @param [String, IO, StringIO] data data for write or IO object
         # @param [Proc] filter filter which for preprocessing each 
         #   written chunk
         # @param [Proc] block callback called when finish and for giving
@@ -242,18 +245,23 @@ module EM
         #
         
         def write(data, filter = nil, &block)
-            written = 0
             pos = 0
+            
+            if data.io?
+                io = data
+            else
+                io = StringIO::new(data)
+            end
             
             worker = Proc::new do
             
                 # Writes
                 begin
-                    chunk = data[written...(written + @rw_len)]
+                    chunk = io.read(@rw_len)
                     if not filter.nil?
                         chunk = filter.call(chunk)
                     end
-                    written += @native.write(chunk)
+                    @native.write(chunk)
                 rescue Errno::EBADF
                     if @native.kind_of? File
                         self.reopen!
@@ -267,9 +275,9 @@ module EM
                 pos = @native.pos
                 
                 # Returns or continues work
-                if written >= data.bytesize
+                if io.eof?
                     if not block.nil?
-                        block.call(written)             # returns result
+                        block.call(pos)                 # returns result
                     end
                 else
                     EM::next_tick { worker.call() }     # continues work

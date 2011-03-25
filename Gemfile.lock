@@ -3,11 +3,11 @@ GEM
   specs:
     eventmachine (0.12.10)
     git (1.2.5)
+    hash-utils (0.14.0)
     jeweler (1.5.2)
       bundler (~> 1.0.0)
       git (>= 1.2.5)
       rake
-    multitype-introspection (0.1.2)
     rake (0.8.7)
     riot (0.12.2)
       rr
@@ -19,6 +19,6 @@ PLATFORMS
 DEPENDENCIES
   bundler (~> 1.0.0)
   eventmachine (>= 0.12.10)
+  hash-utils (>= 0.14.0)
   jeweler (~> 1.5.2)
-  multitype-introspection (>= 0.1.2)
   riot (>= 0.12.1)
