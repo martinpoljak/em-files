@@ -39,6 +39,7 @@ module EM
         # @param [Integer] rwsize size of block operated during one tick
         # @param [Proc] block syntactic sugar for wrapping File access object
         # @return [File] file access object
+        # @yield [File] file access object
         #
 
         def self.open(filepath, mode = "r", rwsize = self::RWSIZE, &block)   # 64 kilobytes
@@ -46,7 +47,7 @@ module EM
             
             file = self::new(filepath, mode, rwsize)
             if not block.nil?
-                block.call(file)
+                yield file
             end
             
             return file
@@ -62,6 +63,7 @@ module EM
         # @param [Proc] filter filter which for postprocessing each 
         #   read chunk
         # @param [Proc] block block for giving back the result
+        # @yield [String] read data
         #
         
         
@@ -70,7 +72,7 @@ module EM
             self::open(filepath, "rb", rwsize) do |io|
                 io.read(nil, filter) do |out|
                     io.close()
-                    block.call(out)
+                    yield out
                 end
             end
         end
@@ -87,6 +89,7 @@ module EM
         #   written chunk
         # @param [Proc] block block called when writing is finished with
         #   written bytes size count as parameter
+        # @yield [Integer] really written data length
         #
         
         def self.write(filepath, data = "", rwsize = self::RWSIZE, filter = nil, &block)
@@ -94,7 +97,9 @@ module EM
             self::open(filepath, "wb", rwsize) do |io|
                 io.write(data, filter) do |length|
                     io.close()
-                    block.call(length)
+                    if not block.nil?
+                        yield length
+                    end
                 end
             end
         end
@@ -161,10 +166,12 @@ module EM
         #   @param [Proc] filter filter which for postprocessing each 
         #       read chunk
         #   @param [Proc] block callback for returning the result
+        #   @yield [String] read data
         # @overload read(&block)
         #   Reads whole content of file.
         #   @param [Proc] filter filter which for processing each block
         #   @param [Proc] block callback for returning the result
+        #   @yield [String] read data
         #
         
         def read(length = nil, filter = nil, &block)
@@ -211,7 +218,7 @@ module EM
                 # Returns or continues work
                 if @native.eof? or (buffer.length == length)
                     if not block.nil?
-                        block.call(buffer)              # returns result
+                        yield buffer              # returns result
                     end
                 else
                     EM::next_tick { worker.call() }     # continues work
@@ -244,6 +251,7 @@ module EM
         #   written chunk
         # @param [Proc] block callback called when finish and for giving
         #   back the length of written data
+        # @yield [Integer] length of really written data
         #
         
         def write(data, filter = nil, &block)
@@ -279,7 +287,7 @@ module EM
                 # Returns or continues work
                 if io.eof?
                     if not block.nil?
-                        block.call(pos)                 # returns result
+                        yield pos                 # returns result
                     end
                 else
                     EM::next_tick { worker.call() }     # continues work
