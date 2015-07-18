@@ -2,7 +2,6 @@ source "http://rubygems.org"
 # Add dependencies required to use your gem here.
 # Example:
    gem "eventmachine", ">= 0"
-   gem "hash-utils", ">= 0.14.0"
 
 # Add dependencies to develop your gem here.
 # Include everything needed to run rake, tests, features, etc.

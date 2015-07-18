@@ -3,9 +3,6 @@
 
 require "eventmachine"
 require "stringio"
-require "hash-utils/io"    # >= 0.14.0
-require "hash-utils/stringio"
-require "hash-utils/object"
 
 ##
 # Main EventMachine module.
@@ -146,7 +143,7 @@ module EM
             rwsize = self::RWSIZE if rwsize.nil?
             
             # If filepath is directly IO, uses it
-            if filepath.io?
+            if filepath.kind_of? IO
                 @native = filepath
             else
                 @native = ::File::open(filepath, mode)
@@ -257,7 +254,7 @@ module EM
         def write(data, filter = nil, &block)
             pos = 0
             
-            if data.io?
+            if data.kind_of? IO
                 io = data
             else
                 io = StringIO::new(data)
