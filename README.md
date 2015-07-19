@@ -7,7 +7,9 @@ to small blocks performed in standalone EM ticks. They speed down the
 file IO operations of sure, but allow running other tasks with them
 simultaneously (from EM point of view).
 
-There  is, of sure, question whethet this all has sense as `EM::defer` is availiable for handing these blocking tasks. But sometimes are situations, in which it's undesirable to do them in separate thread.
+There  is, of sure, question whether this all has sense as `EM::defer` 
+is available for handling these blocking tasks. But sometimes are 
+situations, in which it's undesirable to execute them in separate thread.
 
 API is similar to classic Ruby file IO represented by [File][1] class.
 See an example:
